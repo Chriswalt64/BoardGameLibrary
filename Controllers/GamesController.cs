@@ -116,15 +116,30 @@ namespace BoardGameLibrary.Controllers
             {
                 return NotFound();
             }
-            return View(boardGame);
+
+            // Map from Entity to ViewModel
+            var viewModel = new EditGameViewModel
+            {
+                Id = boardGame.Id,
+                Title = boardGame.Title,
+                Publisher = boardGame.Publisher,
+                YearPublished = boardGame.YearPublished,
+                MinPlayers = boardGame.MinPlayers,
+                MaxPlayers = boardGame.MaxPlayers,
+                PlayingTimeMinutes = boardGame.PlayingTimeMinutes,
+                Complexity = boardGame.Complexity,
+                Description = boardGame.Description
+            };
+
+            return View(viewModel);
         }
 
         // POST: Games/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Publisher,YearPublished,MinPlayers,MaxPlayers,PlayingTimeMinutes,Complexity,Description")] BoardGame boardGame)
+        public async Task<IActionResult> Edit(int id, EditGameViewModel model)
         {
-            if (id != boardGame.Id)
+            if (id != model.Id)
             {
                 return NotFound();
             }
@@ -142,20 +157,23 @@ namespace BoardGameLibrary.Controllers
             {
                 try
                 {
-                    existingGame.Title = boardGame.Title;
-                    existingGame.Publisher = boardGame.Publisher;
-                    existingGame.YearPublished = boardGame.YearPublished;
-                    existingGame.MinPlayers = boardGame.MinPlayers;
-                    existingGame.MaxPlayers = boardGame.MaxPlayers;
-                    existingGame.PlayingTimeMinutes = boardGame.PlayingTimeMinutes;
-                    existingGame.Complexity = boardGame.Complexity;
-                    existingGame.Description = boardGame.Description;
+                    // Update only the properties from the ViewModel
+                    existingGame.Title = model.Title;
+                    existingGame.Publisher = model.Publisher;
+                    existingGame.YearPublished = model.YearPublished;
+                    existingGame.MinPlayers = model.MinPlayers;
+                    existingGame.MaxPlayers = model.MaxPlayers;
+                    existingGame.PlayingTimeMinutes = model.PlayingTimeMinutes;
+                    existingGame.Complexity = model.Complexity;
+                    existingGame.Description = model.Description;
+
+                    // OwnerId and DateAdded are NOT changed!
 
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BoardGameExists(boardGame.Id))
+                    if (!BoardGameExists(model.Id))
                     {
                         return NotFound();
                     }
@@ -166,7 +184,7 @@ namespace BoardGameLibrary.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(boardGame);
+            return View(model);
         }
 
         // GET: Games/Delete/5
