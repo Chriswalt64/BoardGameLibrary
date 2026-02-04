@@ -1,0 +1,114 @@
+@model IEnumerable<Loan>
+@{
+    ViewData["Title"] = "My Loans";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>@ViewData["Title"]</h1>
+    <a asp-action="Create" class="btn btn-primary">Create New Loan</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">No loans yet!</h4>
+        <p>You haven't lent any games yet. Lend a game to a friend to get started.</p>
+    </div>
+}
+else
+{
+    var activeLoans = Model.Where(l => !l.IsReturned).ToList();
+    var returnedLoans = Model.Where(l => l.IsReturned).ToList();
+
+    @if (activeLoans.Any())
+    {
+        <h3>Active Loans</h3>
+        <div class="table-responsive mb-4">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Game</th>
+                        <th>Borrower</th>
+                        <th>Loan Date</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var loan in activeLoans)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-controller="Games" asp-action="Details" asp-route-id="@loan.BoardGameId">
+                                    @loan.BoardGame?.Title
+                                </a>
+                            </td>
+                            <td>@loan.Borrower?.FullName</td>
+                            <td>@loan.LoanDate.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                            <td>
+                                @if (loan.DueDate.HasValue)
+                                {
+                                    @loan.DueDate.Value.ToLocalTime().ToString("MMM dd, yyyy")
+                                    if (loan.DueDate < DateTime.UtcNow)
+                                    {
+                                        <span class="badge bg-danger ms-2">Overdue</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No due date</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge bg-warning text-dark">On Loan</span>
+                            </td>
+                            <td>
+                                <form asp-action="Return" asp-route-id="@loan.Id" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-success">Mark Returned</button>
+                                </form>
+                                <a asp-action="Delete" asp-route-id="@loan.Id" class="btn btn-sm btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    @if (returnedLoans.Any())
+    {
+        <h3>Returned Loans</h3>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Game</th>
+                        <th>Borrower</th>
+                        <th>Loan Date</th>
+                        <th>Return Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var loan in returnedLoans)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-controller="Games" asp-action="Details" asp-route-id="@loan.BoardGameId">
+                                    @loan.BoardGame?.Title
+                                </a>
+                            </td>
+                            <td>@loan.Borrower?.FullName</td>
+                            <td>@loan.LoanDate.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                            <td>@loan.ReturnDate?.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                            <td>
+                                <a asp-action="Delete" asp-route-id="@loan.Id" class="btn btn-sm btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}

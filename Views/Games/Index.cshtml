@@ -1,0 +1,71 @@
+@model IEnumerable<BoardGame>
+@{
+    ViewData["Title"] = "My Games";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>@ViewData["Title"]</h1>
+    <a asp-action="Create" class="btn btn-primary">Add New Game</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">No games yet!</h4>
+        <p>Start building your collection by adding your first board game.</p>
+        <hr>
+        <a asp-action="Create" class="btn btn-primary">Add Your First Game</a>
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var game in Model)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@game.Title</h5>
+                        @if (!string.IsNullOrEmpty(game.Publisher))
+                        {
+                            <h6 class="card-subtitle mb-2 text-muted">@game.Publisher</h6>
+                        }
+                        <ul class="list-unstyled">
+                            @if (game.YearPublished.HasValue)
+                            {
+                                <li><small>📅 Year: @game.YearPublished</small></li>
+                            }
+                            @if (game.MinPlayers.HasValue && game.MaxPlayers.HasValue)
+                            {
+                                <li><small>👥 Players: @game.MinPlayers-@game.MaxPlayers</small></li>
+                            }
+                            @if (game.PlayingTimeMinutes.HasValue)
+                            {
+                                <li><small>⏱️ Time: @game.PlayingTimeMinutes min</small></li>
+                            }
+                            @if (!string.IsNullOrEmpty(game.Complexity))
+                            {
+                                <li><small>🧩 Complexity: @game.Complexity</small></li>
+                            }
+                        </ul>
+                        
+                        @{
+                            var activeLoans = game.Loans.Where(l => !l.IsReturned).ToList();
+                        }
+                        @if (activeLoans.Any())
+                        {
+                            <div class="alert alert-warning py-1 px-2 small mb-2">
+                                Currently on loan
+                            </div>
+                        }
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a asp-action="Details" asp-route-id="@game.Id" class="btn btn-sm btn-outline-primary">Details</a>
+                        <a asp-action="Edit" asp-route-id="@game.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                        <a asp-controller="Loans" asp-action="Create" asp-route-gameId="@game.Id" class="btn btn-sm btn-outline-success">Lend</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

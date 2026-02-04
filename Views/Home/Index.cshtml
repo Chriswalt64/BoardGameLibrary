@@ -1,0 +1,60 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to Board Game Library</h1>
+    <p class="lead">Manage your board game collection and track who's borrowing your games!</p>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">📚 Track Your Collection</h5>
+                <p class="card-text">Keep an organized catalog of all your board games with details like player count, playing time, and complexity.</p>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="Games" asp-action="Index" class="btn btn-primary">View My Games</a>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">🤝 Lend to Friends</h5>
+                <p class="card-text">Track which games you've lent out, who has them, and when they're due back.</p>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="Loans" asp-action="Index" class="btn btn-primary">View Loans</a>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">🎮 Never Forget</h5>
+                <p class="card-text">Always know which games you've borrowed from others and when you need to return them.</p>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="Loans" asp-action="MyBorrowedGames" class="btn btn-primary">Borrowed Games</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (User.Identity?.IsAuthenticated != true)
+{
+    <div class="alert alert-info mt-5" role="alert">
+        <h4 class="alert-heading">Get Started!</h4>
+        <p>Create an account to start managing your board game library.</p>
+        <hr>
+        <div class="mb-0">
+            <a asp-controller="Account" asp-action="Register" class="btn btn-primary">Register Now</a>
+            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary">Login</a>
+        </div>
+    </div>
+}

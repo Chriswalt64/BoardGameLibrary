@@ -1,0 +1,100 @@
+@model IEnumerable<Loan>
+@{
+    ViewData["Title"] = "Games I've Borrowed";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info" role="alert">
+        <p>You haven't borrowed any games yet.</p>
+    </div>
+}
+else
+{
+    var activeLoans = Model.Where(l => !l.IsReturned).ToList();
+    var returnedLoans = Model.Where(l => l.IsReturned).ToList();
+
+    @if (activeLoans.Any())
+    {
+        <h3>Currently Borrowed</h3>
+        <div class="table-responsive mb-4">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Game</th>
+                        <th>Owner</th>
+                        <th>Borrowed Date</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var loan in activeLoans)
+                    {
+                        <tr>
+                            <td><strong>@loan.BoardGame?.Title</strong></td>
+                            <td>@loan.BoardGame?.Owner?.FullName</td>
+                            <td>@loan.LoanDate.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                            <td>
+                                @if (loan.DueDate.HasValue)
+                                {
+                                    @loan.DueDate.Value.ToLocalTime().ToString("MMM dd, yyyy")
+                                    if (loan.DueDate < DateTime.UtcNow)
+                                    {
+                                        <span class="badge bg-danger ms-2">Overdue!</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No due date</span>
+                                }
+                            </td>
+                            <td>
+                                @if (loan.DueDate.HasValue && loan.DueDate < DateTime.UtcNow)
+                                {
+                                    <span class="badge bg-danger">Overdue</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">Borrowed</span>
+                                }
+                            </td>
+                            <td>@(loan.Notes ?? "-")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    @if (returnedLoans.Any())
+    {
+        <h3>Previously Borrowed</h3>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Game</th>
+                        <th>Owner</th>
+                        <th>Borrowed Date</th>
+                        <th>Returned Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var loan in returnedLoans)
+                    {
+                        <tr>
+                            <td>@loan.BoardGame?.Title</td>
+                            <td>@loan.BoardGame?.Owner?.FullName</td>
+                            <td>@loan.LoanDate.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                            <td>@loan.ReturnDate?.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}
