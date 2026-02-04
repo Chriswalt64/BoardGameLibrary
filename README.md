@@ -1,6 +1,6 @@
 # Board Game Library
 
-A web application for managing your board game collection and tracking loans to friends. Built with ASP.NET Core MVC and SQLite.
+An application for managing a board game library, and managing usage of said library. Intended to be used for conventions or events that want to run some form of board game library. Built with Claude.AI, ASP.NET Core MVC, and SQLite.
 
 ## Features
 
