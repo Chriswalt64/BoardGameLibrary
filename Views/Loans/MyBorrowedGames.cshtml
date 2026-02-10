@@ -36,7 +36,6 @@ else
                     {
                         <tr>
                             <td><strong>@loan.BoardGame?.Title</strong></td>
-                            <td>@loan.BoardGame?.Owner?.FullName</td>
                             <td>@loan.LoanDate.ToLocalTime().ToString("MMM dd, yyyy")</td>
                             <td>
                                 @if (loan.DueDate.HasValue)
@@ -88,7 +87,6 @@ else
                     {
                         <tr>
                             <td>@loan.BoardGame?.Title</td>
-                            <td>@loan.BoardGame?.Owner?.FullName</td>
                             <td>@loan.LoanDate.ToLocalTime().ToString("MMM dd, yyyy")</td>
                             <td>@loan.ReturnDate?.ToLocalTime().ToString("MMM dd, yyyy")</td>
                         </tr>
