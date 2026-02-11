@@ -6,37 +6,45 @@
     <h1 class="display-4">Welcome to Board Game Library</h1>
     <p class="lead">Manage your board game collection and track who's borrowing your games!</p>
 </div>
-
+@if (User.Identity?.IsAuthenticated == true)
+{
 <div class="row mt-5">
     <div class="col-md-4">
         <div class="card h-100">
+            @if (User.IsInRole(RoleConstants.Librarian))
+            {
             <div class="card-body">
                 <h5 class="card-title">📚 Track Your Collection</h5>
                 <p class="card-text">Keep an organized catalog of all your board games with details like player count, playing time, and complexity.</p>
-                @if (User.Identity?.IsAuthenticated == true)
-                {
-                    <a asp-controller="Games" asp-action="Index" class="btn btn-primary">View My Games</a>
-                }
+                <a asp-controller="Games" asp-action="Index" class="btn btn-primary">View My Games</a>  
             </div>
+            } else
+            {
+                <div class="card-body">
+                    <h5 class="card-title">📚 View The Collection</h5>
+                    <p class="card-text">Take a look at all of the games the library has to offer!</p>
+                    <a asp-controller="Games" asp-action="Index" class="btn btn-primary">View Games</a>
+                </div>
+            }
         </div>
     </div>
+    @if (User.IsInRole(RoleConstants.Librarian))
+    {
     <div class="col-md-4">
         <div class="card h-100">
             <div class="card-body">
-                <h5 class="card-title">🤝 Lend to Friends</h5>
+                <h5 class="card-title">🤝 Lend a Game</h5>
                 <p class="card-text">Track which games you've lent out, who has them, and when they're due back.</p>
-                @if (User.Identity?.IsAuthenticated == true)
-                {
-                    <a asp-controller="Loans" asp-action="Index" class="btn btn-primary">View Loans</a>
-                }
+                <a asp-controller="Loans" asp-action="Index" class="btn btn-primary">View Loans</a>
             </div>
         </div>
     </div>
+    }
     <div class="col-md-4">
         <div class="card h-100">
             <div class="card-body">
-                <h5 class="card-title">🎮 Never Forget</h5>
-                <p class="card-text">Always know which games you've borrowed from others and when you need to return them.</p>
+                <h5 class="card-title">🎮 My Checkouts</h5>
+                <p class="card-text">Always know which games you've borrowed.</p>
                 @if (User.Identity?.IsAuthenticated == true)
                 {
                     <a asp-controller="Loans" asp-action="MyBorrowedGames" class="btn btn-primary">Borrowed Games</a>
@@ -45,6 +53,7 @@
         </div>
     </div>
 </div>
+}
 
 @if (User.Identity?.IsAuthenticated != true)
 {
