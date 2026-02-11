@@ -54,12 +54,10 @@ The application will start and be available at:
 
 ### 5. First Time Setup
 
-When you first run the application:
+User's can have one of two roles: Librarian or Patron. Patrons can view the contents of the library, and see what items they are currently borrowing. 
+Librarians can maintain items in the library, and can lend items to other users.
 
-1. Click **Register** in the navigation bar
-2. Fill in your details (first name, last name, email, password)
-3. After registration, you'll be automatically logged in
-4. Start adding games to your collection!
+When running the first time, several demo accounts will be created. Check out DbInitializer.cs for the login info.
 
 ## Database
 
@@ -91,7 +89,8 @@ BoardGameLibrary/
 │   ├── Home/            # Home page
 │   └── Shared/          # Layout and shared views
 ├── Data/                # Database context
-│   └── ApplicationDbContext.cs
+│   ├── ApplicationDbContext.cs
+|	└── DbInitializer.cs
 └── wwwroot/             # Static files (CSS, JS)
 ```
 
