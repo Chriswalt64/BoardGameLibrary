@@ -18,13 +18,6 @@ namespace BoardGameLibrary.Data
         {
             base.OnModelCreating(builder);
 
-            // Configure BoardGame relationships
-            builder.Entity<BoardGame>()
-                .HasOne(bg => bg.Owner)
-                .WithMany(u => u.OwnedGames)
-                .HasForeignKey(bg => bg.OwnerId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             // Configure Loan relationships
             builder.Entity<Loan>()
                 .HasOne(l => l.BoardGame)
@@ -36,6 +29,18 @@ namespace BoardGameLibrary.Data
                 .HasOne(l => l.Borrower)
                 .WithMany(u => u.BorrowedGames)
                 .HasForeignKey(l => l.BorrowerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Loan>()
+                .HasOne(l => l.CheckedOutBy)
+                .WithMany(u => u.LoansCheckedOut)
+                .HasForeignKey(l => l.CheckedOutById)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Loan>()
+                .HasOne(l => l.CheckedInBy)
+                .WithMany(u => u.LoansCheckedIn)
+                .HasForeignKey(l => l.CheckedInById)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

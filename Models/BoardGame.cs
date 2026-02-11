@@ -32,11 +32,12 @@ namespace BoardGameLibrary.Models
 
         public DateTime DateAdded { get; set; } = DateTime.UtcNow;
 
-        [Required]
-        public string OwnerId { get; set; } = string.Empty;
+        // Optional: Track quantity if you have multiple copies
+        public int Quantity { get; set; } = 1;
+        
+        public int AvailableQuantity { get; set; } = 1;
 
         // Navigation properties
-        public ApplicationUser? Owner { get; set; }
         public ICollection<Loan> Loans { get; set; } = new List<Loan>();
     }
 }

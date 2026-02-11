@@ -24,7 +24,6 @@ namespace BoardGameLibrary.Controllers
         {
             var userId = _userManager.GetUserId(User);
             var games = await _context.BoardGames
-                .Where(g => g.OwnerId == userId)
                 .Include(g => g.Loans)
                 .OrderBy(g => g.Title)
                 .ToListAsync();
@@ -43,7 +42,7 @@ namespace BoardGameLibrary.Controllers
             var boardGame = await _context.BoardGames
                 .Include(g => g.Loans)
                 .ThenInclude(l => l.Borrower)
-                .FirstOrDefaultAsync(m => m.Id == id && m.OwnerId == userId);
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (boardGame == null)
             {
@@ -62,6 +61,7 @@ namespace BoardGameLibrary.Controllers
         // POST: Games/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+	[Authorize(Roles = RoleConstants.Librarian)]
         /*        public async Task<IActionResult> Create([Bind("Title,Publisher,YearPublished,MinPlayers,MaxPlayers,PlayingTimeMinutes,Complexity,Description")] BoardGame boardGame)
                 {
                     if (ModelState.IsValid)
@@ -89,7 +89,6 @@ namespace BoardGameLibrary.Controllers
                     PlayingTimeMinutes = model.PlayingTimeMinutes,
                     Complexity = model.Complexity,
                     Description = model.Description,
-                    OwnerId = _userManager.GetUserId(User)!,
                     DateAdded = DateTime.UtcNow
                 };
 
@@ -110,7 +109,7 @@ namespace BoardGameLibrary.Controllers
 
             var userId = _userManager.GetUserId(User);
             var boardGame = await _context.BoardGames
-                .FirstOrDefaultAsync(g => g.Id == id && g.OwnerId == userId);
+                .FirstOrDefaultAsync(g => g.Id == id);
 
             if (boardGame == null)
             {
@@ -137,6 +136,7 @@ namespace BoardGameLibrary.Controllers
         // POST: Games/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+	[Authorize(Roles = RoleConstants.Librarian)]
         public async Task<IActionResult> Edit(int id, EditGameViewModel model)
         {
             if (id != model.Id)
@@ -146,7 +146,7 @@ namespace BoardGameLibrary.Controllers
 
             var userId = _userManager.GetUserId(User);
             var existingGame = await _context.BoardGames
-                .FirstOrDefaultAsync(g => g.Id == id && g.OwnerId == userId);
+                .FirstOrDefaultAsync(g => g.Id == id);
 
             if (existingGame == null)
             {
@@ -197,7 +197,7 @@ namespace BoardGameLibrary.Controllers
 
             var userId = _userManager.GetUserId(User);
             var boardGame = await _context.BoardGames
-                .FirstOrDefaultAsync(m => m.Id == id && m.OwnerId == userId);
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (boardGame == null)
             {
@@ -210,11 +210,12 @@ namespace BoardGameLibrary.Controllers
         // POST: Games/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+	[Authorize(Roles = RoleConstants.Librarian)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var userId = _userManager.GetUserId(User);
             var boardGame = await _context.BoardGames
-                .FirstOrDefaultAsync(g => g.Id == id && g.OwnerId == userId);
+                .FirstOrDefaultAsync(g => g.Id == id);
 
             if (boardGame != null)
             {

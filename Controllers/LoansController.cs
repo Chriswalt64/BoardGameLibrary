@@ -27,7 +27,6 @@ namespace BoardGameLibrary.Controllers
             var loans = await _context.Loans
                 .Include(l => l.BoardGame)
                 .Include(l => l.Borrower)
-                .Where(l => l.BoardGame!.OwnerId == userId)
                 .OrderByDescending(l => l.LoanDate)
                 .ToListAsync();
 
@@ -40,7 +39,6 @@ namespace BoardGameLibrary.Controllers
             var userId = _userManager.GetUserId(User);
             var loans = await _context.Loans
                 .Include(l => l.BoardGame)
-                .ThenInclude(bg => bg!.Owner)
                 .Where(l => l.BorrowerId == userId)
                 .OrderByDescending(l => l.LoanDate)
                 .ToListAsync();
@@ -55,7 +53,6 @@ namespace BoardGameLibrary.Controllers
             
             ViewBag.Games = new SelectList(
                 await _context.BoardGames
-                    .Where(g => g.OwnerId == userId)
                     .OrderBy(g => g.Title)
                     .ToListAsync(), 
                 "Id", 
@@ -87,7 +84,7 @@ namespace BoardGameLibrary.Controllers
             var userId = _userManager.GetUserId(User);
             var game = await _context.BoardGames.FindAsync(loan.BoardGameId);
 
-            if (game == null || game.OwnerId != userId)
+            if (game == null)
             {
                 ModelState.AddModelError("", "Invalid game selected.");
             }
@@ -101,7 +98,6 @@ namespace BoardGameLibrary.Controllers
 
             ViewBag.Games = new SelectList(
                 await _context.BoardGames
-                    .Where(g => g.OwnerId == userId)
                     .OrderBy(g => g.Title)
                     .ToListAsync(),
                 "Id",
@@ -128,7 +124,7 @@ namespace BoardGameLibrary.Controllers
             var userId = _userManager.GetUserId(User);
             var loan = await _context.Loans
                 .Include(l => l.BoardGame)
-                .FirstOrDefaultAsync(l => l.Id == id && l.BoardGame!.OwnerId == userId);
+                .FirstOrDefaultAsync(l => l.Id == id);
 
             if (loan == null)
             {
@@ -156,7 +152,7 @@ namespace BoardGameLibrary.Controllers
             var loan = await _context.Loans
                 .Include(l => l.BoardGame)
                 .Include(l => l.Borrower)
-                .FirstOrDefaultAsync(m => m.Id == id && m.BoardGame!.OwnerId == userId);
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (loan == null)
             {
@@ -174,7 +170,7 @@ namespace BoardGameLibrary.Controllers
             var userId = _userManager.GetUserId(User);
             var loan = await _context.Loans
                 .Include(l => l.BoardGame)
-                .FirstOrDefaultAsync(l => l.Id == id && l.BoardGame!.OwnerId == userId);
+                .FirstOrDefaultAsync(l => l.Id == id);
 
             if (loan != null)
             {
