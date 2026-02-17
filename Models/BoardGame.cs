@@ -1,10 +1,14 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BoardGameLibrary.Models
 {
     public class BoardGame
     {
         public int Id { get; set; }
+
+        [AllowNull]
+        public string Barcode { get; set; }
 
         [Required]
         [StringLength(200)]

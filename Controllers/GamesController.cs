@@ -81,6 +81,7 @@ namespace BoardGameLibrary.Controllers
                 // Map from ViewModel to Entity
                 var boardGame = new BoardGame
                 {
+                    Barcode = model.Barcode,
                     Title = model.Title,
                     Publisher = model.Publisher,
                     YearPublished = model.YearPublished,
@@ -120,6 +121,7 @@ namespace BoardGameLibrary.Controllers
             var viewModel = new EditGameViewModel
             {
                 Id = boardGame.Id,
+                Barcode = boardGame.Barcode,
                 Title = boardGame.Title,
                 Publisher = boardGame.Publisher,
                 YearPublished = boardGame.YearPublished,
@@ -158,6 +160,7 @@ namespace BoardGameLibrary.Controllers
                 try
                 {
                     // Update only the properties from the ViewModel
+                    existingGame.Barcode = model.Barcode;
                     existingGame.Title = model.Title;
                     existingGame.Publisher = model.Publisher;
                     existingGame.YearPublished = model.YearPublished;

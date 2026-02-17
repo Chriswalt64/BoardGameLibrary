@@ -7,6 +7,11 @@ namespace BoardGameLibrary.Models
         // This is needed to identify which game we're editing
         public int Id { get; set; }
 
+
+        [Required]
+        [StringLength(200)]
+        public string Barcode { get; set; } = string.Empty;
+
         [Required]
         [StringLength(200)]
         public string Title { get; set; } = string.Empty;
