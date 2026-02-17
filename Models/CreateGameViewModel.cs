@@ -6,6 +6,10 @@ namespace BoardGameLibrary.Models
     {
         [Required]
         [StringLength(200)]
+        public string Barcode { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(200)]
         public string Title { get; set; } = string.Empty;
 
         [StringLength(100)]

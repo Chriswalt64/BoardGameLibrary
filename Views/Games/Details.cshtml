@@ -15,6 +15,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-md-6">
+
                 @if (!string.IsNullOrEmpty(Model.Publisher))
                 {
                     <p><strong>Publisher:</strong> @Model.Publisher</p>
@@ -26,6 +27,10 @@
                 @if (Model.MinPlayers.HasValue && Model.MaxPlayers.HasValue)
                 {
                     <p><strong>Players:</strong> @Model.MinPlayers - @Model.MaxPlayers</p>
+                }
+                @if (!string.IsNullOrEmpty(Model.Barcode))
+                {
+                    <p><strong>Barcode:</strong> @Model.Barcode</p>
                 }
             </div>
             <div class="col-md-6">
